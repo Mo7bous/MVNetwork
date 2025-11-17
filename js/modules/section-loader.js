@@ -1,0 +1,627 @@
+// Navigation handling moved to nav.js
+export async function loadSections() {
+    const mainContent = document.getElementById('main-content');
+    if (!mainContent) return;
+
+    // Section configurations
+    const sections = [
+        { id: 'accueil', template: 'home' },
+        { id: 'qui-sommes-nous', template: 'about' },
+        { id: 'services', template: 'services' },
+        { id: 'solutions', template: 'solutions' },
+        { id: 'pricing', template: 'pricing' },
+        { id: 'tourisme', template: 'tourism' },
+        { id: 'publications', template: 'publications' },
+        { id: 'contact', template: 'contact' }
+    ];
+
+    // Load all sections
+    for (const section of sections) {
+        const sectionHTML = await getSectionTemplate(section.template);
+        const sectionElement = document.createElement('section');
+        sectionElement.id = section.id;
+        sectionElement.className = 'section';
+        sectionElement.innerHTML = sectionHTML;
+        
+        // Hide all sections except accueil initially
+        if (section.id !== 'accueil') {
+            sectionElement.style.display = 'none';
+        }
+        
+        mainContent.appendChild(sectionElement);
+    }
+}
+
+export function showSection(sectionId) {
+    // Fade out current section
+    const currentSection = document.querySelector('.section:not([style*="display: none"])');
+    if (currentSection) {
+        currentSection.style.opacity = '0';
+        currentSection.style.transition = 'opacity 0.3s ease';
+        
+        setTimeout(() => {
+            currentSection.style.display = 'none';
+            
+            // Show target section with fade in
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.style.opacity = '0';
+                targetSection.style.transition = 'opacity 0.3s ease';
+                
+                setTimeout(() => {
+                    targetSection.style.opacity = '1';
+                }, 50);
+                
+                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 300);
+    } else {
+        // If no current section, just show target
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            targetSection.style.display = 'block';
+            targetSection.style.opacity = '0';
+            targetSection.style.transition = 'opacity 0.3s ease';
+            
+            setTimeout(() => {
+                targetSection.style.opacity = '1';
+            }, 50);
+            
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+}
+
+// Make showSection available globally for home buttons
+window.showSection = showSection;
+
+async function getSectionTemplate(templateName) {
+    const templates = {
+        home: `
+            <div class="py-20 md:py-32 min-h-screen flex items-center justify-center relative overflow-hidden">
+                <img src="dakhla-bg.png" class="absolute inset-0 w-full h-full object-cover z-0">
+                <div class="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
+                <div class="container mx-auto px-6 text-center text-white z-20">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">Morocco Venture Network</h1>
+                    <p class="text-2xl md:text-3xl mb-8 animate-fade-in-delay">Votre conciergerie personnelle et professionnelle à Dakhla</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-2">
+                        <a href="#services" class="services-btn bg-[#10B981] hover:bg-[#059669] text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105 inline-block cursor-pointer">
+                            Découvrir nos services
+                        </a>
+                        <a href="#solutions" class="solutions-btn bg-transparent border-2 border-[#10B981] hover:bg-[#10B981] text-[#10B981] hover:text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105 inline-block cursor-pointer">
+                            Découvrez nos solutions
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `,
+        about: `
+            <div class="container mx-auto px-6 py-20 md:py-32">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800 animate-on-scroll">Qui sommes-nous</h2>
+                <div class="max-w-4xl mx-auto text-center">
+                    <p class="text-lg md:text-xl text-gray-700 mb-8 animate-on-scroll text-justify">
+                        Chez Morocco Venture Network, nous sommes bien plus qu'une simple conciergerie. Nous sommes vos partenaires de confiance à Dakhla, votre porte d'entrée vers une expérience exceptionnelle dans cette région fascinante. Notre expertise locale combinée à notre réseau international nous permet de transformer vos projets, qu'ils soient personnels ou professionnels, en réalité tangible. Nous prenons en charge chaque détail avec précision et passion, vous permettant ainsi de vous concentrer sur l'essentiel : réaliser vos rêves et atteindre vos objectifs dans l'une des destinations les plus prometteuses d'Afrique du Nord.
+                    </p>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 mt-12 mb-12 animate-on-scroll">
+                        <div class="text-left bg-white p-6 rounded-lg shadow-lg">
+                            <h4 class="font-semibold text-[#10B981] mb-3">Nos atouts clés :</h4>
+                            <ul class="text-gray-600 space-y-2">
+                                <li class="flex items-start"><i class="fas fa-check text-[#10B981] mr-2 mt-1"></i>Connaissance approfondie du marché local</li>
+                                <li class="flex items-start"><i class="fas fa-check text-[#10B981] mr-2 mt-1"></i>Réseau professionnel solide et fiable</li>
+                                <li class="flex items-start"><i class="fas fa-check text-[#10B981] mr-2 mt-1"></i>Accompagnement personnalisé 24/7</li>
+                                <li class="flex items-start"><i class="fas fa-check text-[#10B981] mr-2 mt-1"></i>Transparence totale dans toutes nos démarches</li>
+                            </ul>
+                        </div>
+                        <div class="text-left bg-white p-6 rounded-lg shadow-lg">
+                            <h4 class="font-semibold text-[#10B981] mb-3">Nos engagements :</h4>
+                            <ul class="text-gray-600 space-y-2">
+                                <li class="flex items-start"><i class="fas fa-handshake text-[#10B981] mr-2 mt-1"></i>Confidentialité absolue</li>
+                                <li class="flex items-start"><i class="fas fa-clock text-[#10B981] mr-2 mt-1"></i>Réactivité maximale</li>
+                                <li class="flex items-start"><i class="fas fa-shield-alt text-[#10B981] mr-2 mt-1"></i>Sécurité de vos investissements</li>
+                                <li class="flex items-start"><i class="fas fa-chart-line text-[#10B981] mr-2 mt-1"></i>Optimisation de vos projets</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Toggle Switch -->
+                    <div class="flex justify-center mb-12 animate-on-scroll">
+                        <div class="bg-gray-200 rounded-full p-1 flex relative">
+                            <button id="about-personnel-toggle" class="px-6 py-3 rounded-full font-semibold transition-all duration-300 bg-[#10B981] text-white">
+                                Personnel
+                            </button>
+                            <button id="about-professionel-toggle" class="px-6 py-3 rounded-full font-semibold transition-all duration-300 text-gray-600">
+                                Professionnel
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- About Content -->
+                    <div id="about-content" class="animate-on-scroll">
+                        <!-- Content will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+        `,
+        services: `
+            <div class="container mx-auto px-6 py-20 md:py-32 bg-white">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800 animate-on-scroll">Nos services</h2>
+                
+                <!-- Toggle Switch -->
+                <div class="flex justify-center mb-12 animate-on-scroll">
+                    <div class="bg-gray-200 rounded-full p-1 flex relative">
+                        <button id="personnel-toggle" class="px-6 py-3 rounded-full font-semibold transition-all duration-300 bg-[#10B981] text-white">
+                            Personnel
+                        </button>
+                        <button id="professionel-toggle" class="px-6 py-3 rounded-full font-semibold transition-all duration-300 text-gray-600">
+                            Professionnel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Services Content -->
+                <div id="services-content">
+                    <!-- Content will be dynamically loaded here -->
+                </div>
+            </div>
+        `,
+        solutions: `
+            <div class="container mx-auto px-6 py-20 md:py-32 bg-[#F8F6F0]">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800 animate-on-scroll">Nos solutions</h2>
+                
+                <!-- Toggle Switch -->
+                <div class="flex justify-center mb-12 animate-on-scroll">
+                    <div class="bg-gray-200 rounded-full p-1 flex relative">
+                        <button id="solutions-personnel-toggle" class="px-6 py-3 rounded-full font-semibold transition-all duration-300 bg-[#10B981] text-white">
+                            Personnel
+                        </button>
+                        <button id="solutions-professionel-toggle" class="px-6 py-3 rounded-full font-semibold transition-all duration-300 text-gray-600">
+                            Professionnel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Solutions Content -->
+                <div id="solutions-content">
+                    <!-- Content will be dynamically loaded here -->
+                </div>
+            </div>
+        `,
+        pricing: `
+            <div class="container mx-auto px-6 py-20 md:py-32 bg-[#F8F6F0]">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800 animate-on-scroll">Nos Tarifs</h2>
+                
+                <div class="max-w-4xl mx-auto mb-12 animate-on-scroll">
+                    <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+                        <p class="text-lg text-gray-700 mb-6 text-justify">
+                            Chez Morocco Venture Network, nous adaptons nos tarifs à vos besoins spécifiques. Notre politique de transparence totale vous garantit des prix clairs et sans surprise. Nous facturons soit à l'heure pour les missions ponctuelles, soit sur devis personnalisé pour les projets complets. Chaque devis détaillé inclut une analyse approfondie de vos besoins et une proposition sur mesure.
+                        </p>
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div class="text-center">
+                                <i class="fas fa-clock text-3xl text-[#10B981] mb-3"></i>
+                                <h4 class="font-semibold mb-2">Facturation à l'heure</h4>
+                                <p class="text-sm text-gray-600">Pour les missions courtes et conseils</p>
+                            </div>
+                            <div class="text-center">
+                                <i class="fas fa-file-contract text-3xl text-[#10B981] mb-3"></i>
+                                <h4 class="font-semibold mb-2">Devis personnalisé</h4>
+                                <p class="text-sm text-gray-600">Pour les projets complexes</p>
+                            </div>
+                            <div class="text-center">
+                                <i class="fas fa-percentage text-3xl text-[#10B981] mb-3"></i>
+                                <h4 class="font-semibold mb-2">Forfaits disponibles</h4>
+                                <p class="text-sm text-gray-600">Économies garanties</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 1 - Services de base -->
+                <div class="mb-12 animate-on-scroll">
+                    <h3 class="text-2xl font-semibold mb-6 text-center text-gray-800">Catégorie 1 - Services de base</h3>
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="bg-[#10B981] text-white p-4">
+                            <h4 class="font-semibold text-center">Recherche & Prospection</h4>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center border-b pb-3">
+                                    <div>
+                                        <h5 class="font-medium">Recherche de logement</h5>
+                                        <p class="text-sm text-gray-600">Visites, analyses, rapport complet</p>
+                                    </div>
+                                    <span class="font-semibold text-[#10B981]">250 DH/heure</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b pb-3">
+                                    <div>
+                                        <h5 class="font-medium">Prospection immobilière</h5>
+                                        <p class="text-sm text-gray-600">Analyse de projets, visites terrain</p>
+                                    </div>
+                                    <span class="font-semibold text-[#10B981]">300 DH/heure</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b pb-3">
+                                    <div>
+                                        <h5 class="font-medium">Analyse de marché</h5>
+                                        <p class="text-sm text-gray-600">Rapport détaillé avec tendances</p>
+                                    </div>
+                                    <span class="font-semibold text-[#10B981]">350 DH/heure</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h5 class="font-medium">Organisation de voyages</h5>
+                                        <p class="text-sm text-gray-600">Planification complète sur mesure</p>
+                                    </div>
+                                    <span class="font-semibold text-[#10B981]">200 DH/heure</span>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-[#F8F6F0] rounded-lg">
+                                <p class="text-sm text-gray-600 text-center">
+                                    <i class="fas fa-info-circle text-[#10B981] mr-2"></i>
+                                    Forfait 10 heures : 10% de réduction • Forfait 20 heures : 15% de réduction
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 2 - Services intermédiaires -->
+                <div class="mb-12 animate-on-scroll">
+                    <h3 class="text-2xl font-semibold mb-6 text-center text-gray-800">Catégorie 2 - Services intermédiaires</h3>
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="bg-orange-500 text-white p-4">
+                            <h4 class="font-semibold text-center">Accompagnement & Gestion</h4>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center border-b pb-3">
+                                    <div>
+                                        <h5 class="font-medium">Création d'entreprise</h5>
+                                        <p class="text-sm text-gray-600">Toutes les démarches administratives</p>
+                                    </div>
+                                    <span class="font-semibold text-orange-500">À partir de 5 000 DH</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b pb-3">
+                                    <div>
+                                        <h5 class="font-medium">Gestion administrative</h5>
+                                        <p class="text-sm text-gray-600">Légalisation, traduction, authentification</p>
+                                    </div>
+                                    <span class="font-semibold text-orange-500">400 DH/heure</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b pb-3">
+                                    <div>
+                                        <h5 class="font-medium">Rencontres avec promoteurs</h5>
+                                        <p class="text-sm text-gray-600">Organisation et accompagnement</p>
+                                    </div>
+                                    <span class="font-semibold text-orange-500">500 DH/heure</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h5 class="font-medium">Dossier de suivi</h5>
+                                        <p class="text-sm text-gray-600">Documentation complète organisée</p>
+                                    </div>
+                                    <span class="font-semibold text-orange-500">350 DH/heure</span>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-orange-50 rounded-lg">
+                                <p class="text-sm text-gray-600 text-center">
+                                    <i class="fas fa-star text-orange-500 mr-2"></i>
+                                    Pack création d'entreprise complet : 8 000 DH (économie de 2 000 DH)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 3 - Services premium -->
+                <div class="mb-12 animate-on-scroll">
+                    <h3 class="text-2xl font-semibold mb-6 text-center text-gray-800">Catégorie 3 - Services premium</h3>
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="bg-purple-600 text-white p-4">
+                            <h4 class="font-semibold text-center">Services exclusifs</h4>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center border-b pb-3">
+                                    <div>
+                                        <h5 class="font-medium">Conciergerie 24/7</h5>
+                                        <p class="text-sm text-gray-600">Assistant personnel disponible en continu</p>
+                                    </div>
+                                    <span class="font-semibold text-purple-600">À partir de 10 000 DH/mois</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b pb-3">
+                                    <div>
+                                        <h5 class="font-medium">Networking & Connexions</h5>
+                                        <p class="text-sm text-gray-600">Accès à notre réseau d'experts</p>
+                                    </div>
+                                    <span class="font-semibold text-purple-600">800 DH/heure</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b pb-3">
+                                    <div>
+                                        <h5 class="font-medium">Événements exclusifs</h5>
+                                        <p class="text-sm text-gray-600">Organisation d'événements haut de gamme</p>
+                                    </div>
+                                    <span class="font-semibold text-purple-600">Sur devis</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h5 class="font-medium">Services VIP</h5>
+                                        <p class="text-sm text-gray-600">Prestations sur mesure luxe</p>
+                                    </div>
+                                    <span class="font-semibold text-purple-600">Sur devis</span>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-purple-50 rounded-lg">
+                                <p class="text-sm text-gray-600 text-center">
+                                    <i class="fas fa-crown text-purple-600 mr-2"></i>
+                                    Abonnement premium mensuel : 15 000 DH (services illimités)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Devis Simulator -->
+                <div class="bg-white rounded-lg shadow-lg p-8 animate-on-scroll">
+                    <h3 class="text-2xl font-semibold mb-6 text-center text-gray-800">Simulateur de devis</h3>
+                    <form id="devis-form" class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="devis-name" class="block text-gray-700 font-semibold mb-2">Nom complet *</label>
+                                <input type="text" id="devis-name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300" required>
+                            </div>
+                            <div>
+                                <label for="devis-email" class="block text-gray-700 font-semibold mb-2">Email *</label>
+                                <input type="email" id="devis-email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300" required>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div>
+                                <label for="devis-service" class="block text-gray-700 font-semibold mb-2">Service souhaité *</label>
+                                <select id="devis-service" name="service" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300" required>
+                                    <option value="">Sélectionnez un service</option>
+                                    <option value="recherche-logement">Recherche de logement</option>
+                                    <option value="prospection">Prospection immobilière</option>
+                                    <option value="analyse-marche">Analyse de marché</option>
+                                    <option value="creation-entreprise">Création d'entreprise</option>
+                                    <option value="gestion-admin">Gestion administrative</option>
+                                    <option value="conciergerie">Conciergerie 24/7</option>
+                                    <option value="autre">Autre service</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="devis-duree" class="block text-gray-700 font-semibold mb-2">Durée estimée</label>
+                                <select id="devis-duree" name="duree" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300">
+                                    <option value="">Durée estimée</option>
+                                    <option value="1-5h">1-5 heures</option>
+                                    <option value="5-10h">5-10 heures</option>
+                                    <option value="10-20h">10-20 heures</option>
+                                    <option value="20h+">Plus de 20 heures</option>
+                                    <option value="projet">Projet complet</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="devis-urgence" class="block text-gray-700 font-semibold mb-2">Urgence</label>
+                                <select id="devis-urgence" name="urgence" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300">
+                                    <option value="standard">Standard</option>
+                                    <option value="express">Express (+50%)</option>
+                                    <option value="premium">Premium (+100%)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="devis-details" class="block text-gray-700 font-semibold mb-2">Détails du projet *</label>
+                            <textarea id="devis-details" name="details" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300" placeholder="Décrivez en détail vos besoins et attentes..." required></textarea>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="devis-budget" class="block text-gray-700 font-semibold mb-2">Budget estimé</label>
+                                <select id="devis-budget" name="budget" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300">
+                                    <option value="">Budget estimé</option>
+                                    <option value="0-1000">0 - 1 000 DH</option>
+                                    <option value="1000-5000">1 000 - 5 000 DH</option>
+                                    <option value="5000-10000">5 000 - 10 000 DH</option>
+                                    <option value="10000-25000">10 000 - 25 000 DH</option>
+                                    <option value="25000+">Plus de 25 000 DH</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="devis-delai" class="block text-gray-700 font-semibold mb-2">Délai souhaité</label>
+                                <input type="date" id="devis-delai" name="delai" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-[#10B981] hover:bg-[#059669] text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                            Demander un devis personnalisé
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="mt-12 bg-white rounded-lg shadow-lg p-8 animate-on-scroll">
+                    <h3 class="text-xl font-semibold mb-4 text-center text-gray-800">Informations complémentaires</h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-semibold text-[#10B981] mb-3">Modes de paiement acceptés</h4>
+                            <ul class="text-gray-600 space-y-1">
+                                <li><i class="fas fa-check text-[#10B981] mr-2"></i>Espèces (MAD, EUR, USD)</li>
+                                <li><i class="fas fa-check text-[#10B981] mr-2"></i>Carte bancaire</li>
+                                <li><i class="fas fa-check text-[#10B981] mr-2"></i>Virement bancaire</li>
+                                <li><i class="fas fa-check text-[#10B981] mr-2"></i>PayPal</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-[#10B981] mb-3">Conditions générales</h4>
+                            <ul class="text-gray-600 space-y-1">
+                                <li><i class="fas fa-info-circle text-[#10B981] mr-2"></i>Acompte de 30% à la commande</li>
+                                <li><i class="fas fa-info-circle text-[#10B981] mr-2"></i>Solde à la livraison</li>
+                                <li><i class="fas fa-info-circle text-[#10B981] mr-2"></i>TVA comprise aux taux en vigueur</li>
+                                <li><i class="fas fa-info-circle text-[#10B981] mr-2"></i>Devis gratuit sous 24h</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
+        tourism: `
+            <div class="container mx-auto px-6 py-20 md:py-32 bg-white">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800 animate-on-scroll">Découvrez Dakhla</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="tourism-card relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-on-scroll">
+                        <img src="immobilier.png" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent flex items-end p-4">
+                            <h3 class="text-white text-lg font-semibold">Immobilier</h3>
+                        </div>
+                    </div>
+                    <div class="tourism-card relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-on-scroll">
+                        <img src="kitesurf.png" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent flex items-end p-4">
+                            <h3 class="text-white text-lg font-semibold">Kitesurf</h3>
+                        </div>
+                    </div>
+                    <div class="tourism-card relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-on-scroll">
+                        <img src="food.png" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent flex items-end p-4">
+                            <h3 class="text-white text-lg font-semibold">Gastronomie</h3>
+                        </div>
+                    </div>
+                    <div class="tourism-card relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-on-scroll">
+                        <img src="lagoon.png" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent flex items-end p-4">
+                            <h3 class="text-white text-lg font-semibold">Lagune</h3>
+                        </div>
+                    </div>
+                    <div class="tourism-card relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-on-scroll">
+                        <img src="desert.png" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent flex items-end p-4">
+                            <h3 class="text-white text-lg font-semibold">Désert</h3>
+                        </div>
+                    </div>
+                    <div class="tourism-card relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-on-scroll">
+                        <img src="afrique.png" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent flex items-end p-4">
+                            <h3 class="text-white text-lg font-semibold">Connexion Afrique</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
+        publications: `
+            <div class="container mx-auto px-6 py-20 md:py-32 bg-[#F8F6F0]">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800 animate-on-scroll">Publications récentes</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="space-y-6">
+                        <article class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 animate-on-scroll">
+                            <h3 class="text-xl font-semibold mb-3 text-[#10B981]">Investir à Dakhla : Le guide complet 2025</h3>
+                            <p class="text-gray-600 mb-4">Tout ce que vous devez savoir pour investir sereinement à Dakhla, de la prospection à la finalisation...</p>
+                            <a href="#" class="text-[#10B981] hover:text-[#059669] font-semibold">Lire plus →</a>
+                        </article>
+                        <article class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 animate-on-scroll">
+                            <h3 class="text-xl font-semibold mb-3 text-[#10B981]">Dakhla : Carrefour stratégique entre l'Europe et l'Afrique</h3>
+                            <p class="text-gray-600 mb-4">Découvrez comment Dakhla devient le hub économique incontournable...</p>
+                            <a href="#" class="text-[#10B981] hover:text-[#059669] font-semibold">Lire plus →</a>
+                        </article>
+                        <article class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 animate-on-scroll">
+                            <h3 class="text-xl font-semibold mb-3 text-[#10B981]">Immobilier à Dakhla : Les tendances du marché</h3>
+                            <p class="text-gray-600 mb-4">Analyse approfondie du marché immobilier et opportunités d'investissement...</p>
+                            <a href="#" class="text-[#10B981] hover:text-[#059669] font-semibold">Lire plus →</a>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        `,
+        contact: `
+            <div class="container mx-auto px-6 py-20 md:py-32 bg-white">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800 animate-on-scroll">Contactez-nous</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-12 animate-on-scroll">
+                        <p class="text-lg text-gray-700 mb-8 text-justify">
+                            Nous sommes là pour transformer vos projets en réalité. Que vous souhaitiez investir, créer votre entreprise, organiser un événement ou simplement découvrir Dakhla, notre équipe multilingue est disponible 24/7 pour vous accompagner. Prenez contact avec nous et découvrez comment nous pouvons faire de votre expérience à Dakhla un succès absolu.
+                        </p>
+                        <div class="grid md:grid-cols-3 gap-6 mb-12">
+                            <div class="bg-[#F8F6F0] p-6 rounded-lg">
+                                <i class="fas fa-phone text-2xl text-[#10B981] mb-3"></i>
+                                <h4 class="font-semibold mb-2">Appelez-nous</h4>
+                                <p class="text-gray-600">+212 5 28 XX XX XX</p>
+                                <p class="text-sm text-gray-500">Disponible 24/7</p>
+                            </div>
+                            <div class="bg-[#F8F6F0] p-6 rounded-lg">
+                                <i class="fas fa-envelope text-2xl text-[#10B981] mb-3"></i>
+                                <h4 class="font-semibold mb-2">Email</h4>
+                                <p class="text-gray-600">contact@moroccoventure.com</p>
+                                <p class="text-sm text-gray-500">Réponse sous 2h</p>
+                            </div>
+                            <div class="bg-[#F8F6F0] p-6 rounded-lg">
+                                <i class="fas fa-map-marker-alt text-2xl text-[#10B981] mb-3"></i>
+                                <h4 class="font-semibold mb-2">Bureau</h4>
+                                <p class="text-gray-600">Dakhla, Boulevard de l'Atlantique</p>
+                                <p class="text-sm text-gray-500">Sur rendez-vous</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form class="space-y-6" id="contact-form">
+                        <div class="animate-on-scroll">
+                            <label for="name" class="block text-gray-700 font-semibold mb-2">Nom complet *</label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300" required>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="animate-on-scroll">
+                                <label for="email" class="block text-gray-700 font-semibold mb-2">Email *</label>
+                                <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300" required>
+                            </div>
+                            <div class="animate-on-scroll">
+                                <label for="phone" class="block text-gray-700 font-semibold mb-2">Téléphone</label>
+                                <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300">
+                            </div>
+                        </div>
+                        <div class="animate-on-scroll">
+                            <label for="subject" class="block text-gray-700 font-semibold mb-2">Sujet *</label>
+                            <select id="subject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300" required>
+                                <option value="">Sélectionnez un sujet</option>
+                                <option value="investissement">Investissement immobilier</option>
+                                <option value="entreprise">Création d'entreprise</option>
+                                <option value="tourisme">Tourisme et séjours</option>
+                                <option value="autre">Autre demande</option>
+                            </select>
+                        </div>
+                        <div class="animate-on-scroll">
+                            <label for="message" class="block text-gray-700 font-semibold mb-2">Message *</label>
+                            <textarea id="message" name="message" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#10B981] transition-colors duration-300" placeholder="Décrivez votre projet en détail..." required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-[#10B981] hover:bg-[#059669] text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 animate-on-scroll">
+                            Envoyer le message
+                        </button>
+                    </form>
+                    
+                    <div class="text-center mt-16 animate-on-scroll">
+                        <p class="text-gray-600 mb-6">Suivez-nous sur les réseaux sociaux</p>
+                        <div class="flex justify-center space-x-6 mb-8">
+                            <a href="#" class="text-gray-600 hover:text-[#10B981] transition-all duration-300 transform hover:scale-110">
+                                <i class="fab fa-facebook text-3xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-600 hover:text-[#10B981] transition-all duration-300 transform hover:scale-110">
+                                <i class="fab fa-linkedin text-3xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-600 hover:text-[#10B981] transition-all duration-300 transform hover:scale-110">
+                                <i class="fab fa-instagram text-3xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-600 hover:text-[#10B981] transition-all duration-300 transform hover:scale-110">
+                                <i class="fab fa-whatsapp text-3xl"></i>
+                            </a>
+                        </div>
+                        <div class="bg-[#F8F6F0] p-6 rounded-lg">
+                            <h4 class="font-semibold text-gray-800 mb-3">Besoin d'une réponse rapide ?</h4>
+                            <p class="text-gray-600">Notre service WhatsApp Business est disponible 24/7 pour vos questions urgentes. Envoyez-nous un message et obtenez une réponse en quelques minutes !</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
+    };
+
+    return templates[templateName] || '';
+}
